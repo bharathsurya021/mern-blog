@@ -9,8 +9,11 @@ const postSchema = new mongoose.Schema(
     author: { type: String, required: true },
     likes: { type: Number, default: 0 },
     readTime: { type: String },
-    archived: { type: Boolean, default: false },
-    drafts: { type: Boolean, default: false }
+    status: {
+      type: String,
+      enum: ['drafted', 'posted', 'archived'],
+      default: 'drafted',
+    }
   },
   { timestamps: true }
 );
