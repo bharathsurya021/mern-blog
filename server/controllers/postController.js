@@ -11,6 +11,24 @@ class PostController {
     });
   });
 
+  deletePost = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    await postService.deletePostById(id);
+    res.status(200).json({
+      message: 'Post Deleted successfully',
+    });
+  });
+
+  getPost = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const post = await postService.getPostById(id);
+    res.status(200).json({
+      message: 'Post retrieved successfully',
+      data: post
+    });
+  });
+
+
 }
 
 export default new PostController();
