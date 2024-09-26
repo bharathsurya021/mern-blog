@@ -25,8 +25,11 @@ const errorMessages = {
   postUpdateFailed: { code: 'POST_004', message: 'Failed to update post', severity: 'ERROR' },
   postDeletionFailed: { code: 'POST_005', message: 'Failed to delete post', severity: 'ERROR' },
   authorNotFound: { code: 'POST_006', message: 'Author not found', severity: 'ERROR' },
+  postFetchFailed: { code: 'POST_007', message: 'Failed to fetch post', severity: 'ERROR' },
+  noPostsFound: { code: 'POST_008', message: 'No Posts Found', severity: 'ERROR' },
 
   invalidId: { code: 'MONGO_001', message: 'Invalid ObjectId', severity: 'ERROR' },
+  invalidValue: { code: 'MONGO_002', message: 'Invalid value', severity: 'ERROR' },
 
   // General errors
   somethingWentWrong: { code: 'GEN_001', message: 'Something went wrong. Please try again later', severity: 'CRITICAL' },
