@@ -1,6 +1,6 @@
 import Post from '../models/postModel.js';
 import errorMessages from '../constants/errormessages.js';
-import { calculateReadTime, validateObjectId } from '../utils/common.js';
+import { calculateReadTime, getFilterQuery, getSortOptions, validateObjectId } from '../utils/common.js';
 import User from '../models/userModel.js';
 class PostService {
   async createPost(data, userId) {
@@ -28,7 +28,7 @@ class PostService {
       throw err;
     }
 
-    const post = new Post({ ...data, authorId: userId, author: author?.name, readTime });
+    const post = new Post({ ...data, authorId: userId, author: author?.name, readTime, status: "posted" });
 
     try {
       return await post.save();
@@ -89,7 +89,66 @@ class PostService {
     }
 
   }
+  async getAll(options = {}) {
+    const { filterOptions = {}, sortOptions = {} } = options;
+    const { tags = [], author = "", keyword = "" } = filterOptions;
+    const { sortBy = 'createdAt', order = 'desc' } = sortOptions;
 
+    const sortObj = getSortOptions(sortBy, order);
+    const filterQuery = getFilterQuery(tags, author, keyword);
+
+    try {
+      const posts = await Post.find(filterQuery, { authorId: 0 }).sort(sortObj);
+      return posts;
+    } catch (error) {
+      const err = new Error(errorMessages.postFetchFailed.message);
+      err.code = errorMessages.postFetchFailed.code;
+      throw err;
+    }
+  }
+
+  async updatePostStatus(postId, status) {
+
+    if (!validateObjectId(postId)) {
+      const err = new Error(errorMessages.invalidId.message);
+      err.code = errorMessages.invalidId.code;
+      throw err;
+    }
+    const post = await Post.findOne({ _id: postId }, { authorId: 0 })
+    if (!post) {
+      const err = new Error(errorMessages.postNotFound.message);
+      err.code = errorMessages.postNotFound.code;
+      throw err;
+    }
+    const validStatuses = ['drafted', 'posted', 'archived'];
+
+    if (!validStatuses.includes(status)) {
+      const err = new Error(errorMessages.invalidValue.message);
+      err.code = errorMessages.invalidValue.code;
+      throw err;
+    }
+    try {
+      let updateField;
+
+      if (status === 'drafted') {
+        updateField = { status: 'drafted' };
+      } else if (status === 'archived') {
+        updateField = { status: 'archived' };
+      }
+      const updatedPost = await Post.findByIdAndUpdate(
+        { _id: postId },
+        updateField,
+        { new: true }
+      );
+
+
+    } catch (error) {
+      const err = new Error(errorMessages.postUpdateFailed.message);
+      err.code = errorMessages.postUpdateFailed.code;
+      throw err;
+    }
+
+  }
 }
 
 export default new PostService();

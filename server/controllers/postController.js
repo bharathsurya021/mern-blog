@@ -28,6 +28,46 @@ class PostController {
     });
   });
 
+  getAllPosts = asyncHandler(async (req, res) => {
+    const { tags, author, keyword, sortBy, order } = req.query;
+    const processedTags = tags ? tags.split(',') : [];
+    const filterOptions = {
+      tags: processedTags,
+      author: author || '',
+      keyword: keyword || ''
+    };
+
+    const sortOptions = {
+      sortBy: sortBy || 'createdAt',
+      order: order || 'desc'
+    };
+    const options = { filterOptions, sortOptions };
+
+    const posts = await postService.getAll(options);
+    if (posts.length > 0) {
+      res.status(200).json({
+        message: 'Posts retrieved successfully',
+        data: posts
+      });
+    } else {
+      res.status(404).json({
+        message: 'No posts found',
+        data: posts
+      });
+    }
+
+  });
+
+  updateStatus = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const status = req.body.status;
+    await postService.updatePostStatus(id, status);
+    res.status(200).json({
+      message: 'Post updates successfully',
+    });
+  });
+
+
 
 }
 
