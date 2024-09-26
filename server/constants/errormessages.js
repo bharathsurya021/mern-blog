@@ -16,6 +16,15 @@ const errorMessages = {
   // Login-related errors
   invalidCredentials: { code: 'AUTH_011', message: 'Invalid email or password', severity: 'ERROR' },
   tokenInvalid: { code: 'AUTH_012', message: 'Invalid token', severity: 'ERROR' },
+  noToken: { code: 'AUTH_013', message: 'No token', severity: 'ERROR' },
+
+  // Post-related errors
+  postRequired: { code: 'POST_001', message: 'Title and Description are required', severity: 'ERROR' },
+  postNotFound: { code: 'POST_002', message: 'Post not found', severity: 'ERROR' },
+  postCreationFailed: { code: 'POST_003', message: 'Failed to create post', severity: 'ERROR' },
+  postUpdateFailed: { code: 'POST_004', message: 'Failed to update post', severity: 'ERROR' },
+  postDeletionFailed: { code: 'POST_005', message: 'Failed to delete post', severity: 'ERROR' },
+  authorNotFound: { code: 'POST_006', message: 'Author not found', severity: 'ERROR' },
 
   // General errors
   somethingWentWrong: { code: 'GEN_001', message: 'Something went wrong. Please try again later', severity: 'CRITICAL' },
