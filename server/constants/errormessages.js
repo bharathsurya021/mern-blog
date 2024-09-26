@@ -26,6 +26,8 @@ const errorMessages = {
   postDeletionFailed: { code: 'POST_005', message: 'Failed to delete post', severity: 'ERROR' },
   authorNotFound: { code: 'POST_006', message: 'Author not found', severity: 'ERROR' },
 
+  invalidId: { code: 'MONGO_001', message: 'Invalid ObjectId', severity: 'ERROR' },
+
   // General errors
   somethingWentWrong: { code: 'GEN_001', message: 'Something went wrong. Please try again later', severity: 'CRITICAL' },
 };
