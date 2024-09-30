@@ -28,7 +28,7 @@ class PostService {
       throw err;
     }
 
-    const post = new Post({ ...data, authorId: userId, author: author?.name, readTime, status: "posted" });
+    const post = new Post({ ...data, authorId: userId, author: author?.name, readTime });
 
     try {
       return await post.save();
@@ -107,48 +107,59 @@ class PostService {
     }
   }
 
-  async updatePostStatus(postId, status) {
+  async updatePost(postId, postData) {
 
     if (!validateObjectId(postId)) {
       const err = new Error(errorMessages.invalidId.message);
       err.code = errorMessages.invalidId.code;
       throw err;
     }
-    const post = await Post.findOne({ _id: postId }, { authorId: 0 })
+
+    const post = await Post.findOne({ _id: postId });
     if (!post) {
       const err = new Error(errorMessages.postNotFound.message);
       err.code = errorMessages.postNotFound.code;
       throw err;
     }
-    const validStatuses = ['drafted', 'posted', 'archived'];
 
-    if (!validStatuses.includes(status)) {
-      const err = new Error(errorMessages.invalidValue.message);
-      err.code = errorMessages.invalidValue.code;
+    const { title, description, tags, readTime } = postData;
+
+    if (!title || !description) {
+      const err = new Error(errorMessages.postRequired.message);
+      err.code = errorMessages.postRequired.code;
       throw err;
     }
-    try {
-      let updateField;
+    let updatedTags
+    if (!tags) {
+      updatedTags = []
+    } else {
+      updatedTags = tags
+    }
 
-      if (status === 'drafted') {
-        updateField = { status: 'drafted' };
-      } else if (status === 'archived') {
-        updateField = { status: 'archived' };
-      }
+    const updatedReadTime = calculateReadTime(description);
+
+    try {
+
       const updatedPost = await Post.findByIdAndUpdate(
-        { _id: postId },
-        updateField,
+        postId,
+        {
+          title,
+          description,
+          tags: updatedTags,
+          readTime: updatedReadTime,
+        },
         { new: true }
       );
 
+      return updatedPost;
 
     } catch (error) {
       const err = new Error(errorMessages.postUpdateFailed.message);
       err.code = errorMessages.postUpdateFailed.code;
       throw err;
     }
-
   }
+
 }
 
 export default new PostService();

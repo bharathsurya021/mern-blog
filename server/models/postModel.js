@@ -7,13 +7,7 @@ const postSchema = new mongoose.Schema(
     description: { type: String, required: true },
     authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     author: { type: String, required: true },
-    likes: { type: Number, default: 0 },
     readTime: { type: String },
-    status: {
-      type: String,
-      enum: ['drafted', 'posted', 'archived'],
-      default: 'drafted',
-    }
   },
   { timestamps: true }
 );

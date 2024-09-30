@@ -58,14 +58,14 @@ class PostController {
 
   });
 
-  updateStatus = asyncHandler(async (req, res) => {
+  updatePost = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const status = req.body.status;
-    await postService.updatePostStatus(id, status);
+    const postData = req.body;
+    await postService.updatePost(id, postData)
     res.status(200).json({
-      message: 'Post updates successfully',
+      message: 'Post updated successfully',
     });
-  });
+  })
 
 
 
